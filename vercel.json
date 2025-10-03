@@ -1,0 +1,56 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "pnpm build",
+  "devCommand": "pnpm dev",
+  "installCommand": "pnpm install",
+  "outputDirectory": ".next",
+  "functions": {
+    "app/api/**/*.ts": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/studio/:path*",
+      "destination": "/studio/[[...index]]/:path*"
+    }
+  ],
+  "env": {
+    "NEXT_PUBLIC_SANITY_PROJECT_ID": "@sanity_project_id",
+    "NEXT_PUBLIC_SANITY_DATASET": "@sanity_dataset",
+    "SANITY_API_WRITE_TOKEN": "@sanity_write_token",
+    "NEXT_PUBLIC_POSTHOG_KEY": "@posthog_key",
+    "NEXT_PUBLIC_POSTHOG_HOST": "@posthog_host",
+    "YOUTUBE_API_KEY": "@youtube_api_key",
+    "YOUTUBE_CHANNEL_ID": "@youtube_channel_id",
+    "CONVERTKIT_API_KEY": "@convertkit_api_key",
+    "CONVERTKIT_FORM_ID": "@convertkit_form_id",
+    "MAILERLITE_API_KEY": "@mailerlite_api_key",
+    "MAILERLITE_GROUP_ID": "@mailerlite_group_id",
+    "SLACK_WEBHOOK_URL": "@slack_webhook_url",
+    "AIRTABLE_API_KEY": "@airtable_api_key",
+    "AIRTABLE_BASE_ID": "@airtable_base_id",
+    "AIRTABLE_TABLE_NAME": "@airtable_table_name",
+    "HUBSPOT_API_KEY": "@hubspot_api_key"
+  }
+}
+

@@ -1,0 +1,117 @@
+{
+  "dashboards": [
+    {
+      "name": "Acquisition",
+      "description": "Track how users discover and engage with the platform",
+      "events": [
+        "hero_cta_click",
+        "newsletter_subscribe",
+        "referral_signup"
+      ],
+      "funnels": [
+        {
+          "name": "Hero to Subscribe",
+          "steps": [
+            "hero_cta_click",
+            "newsletter_subscribe"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Content Engagement",
+      "description": "Monitor content consumption and user engagement",
+      "events": [
+        "episode_play",
+        "episode_progress",
+        "episode_click",
+        "glossary_open",
+        "transcript_search"
+      ],
+      "insights": [
+        "Most watched episodes",
+        "Average watch time",
+        "Glossary term popularity",
+        "Search patterns"
+      ]
+    },
+    {
+      "name": "Conversion",
+      "description": "Track conversion from content to actions",
+      "events": [
+        "short_download",
+        "stakeholder_map_use",
+        "media_kit_download",
+        "calendly_book"
+      ],
+      "conversion_rates": [
+        "Episode view to download",
+        "Glossary to map builder",
+        "Guest profile to booking"
+      ]
+    },
+    {
+      "name": "Community",
+      "description": "Monitor community engagement and Q&A activity",
+      "events": [
+        "question_submit",
+        "question_vote",
+        "poll_vote",
+        "episode_share"
+      ],
+      "metrics": [
+        "Questions per episode",
+        "Vote participation rate",
+        "Social sharing frequency"
+      ]
+    }
+  ],
+  "feature_flags": [
+    {
+      "key": "enhanced_glossary",
+      "name": "Enhanced Glossary Tooltips",
+      "description": "Enable advanced tooltip interactions in the glossary"
+    },
+    {
+      "key": "stakeholder_map_beta",
+      "name": "Stakeholder Map Builder",
+      "description": "Enable drag-and-drop stakeholder mapping tool"
+    },
+    {
+      "key": "ai_transcript_search",
+      "name": "AI-Powered Transcript Search",
+      "description": "Enable semantic search across episode transcripts"
+    }
+  ],
+  "cohorts": [
+    {
+      "name": "Power Users",
+      "description": "Users who engage with multiple content types",
+      "criteria": {
+        "events": [
+          "episode_play",
+          "glossary_open",
+          "stakeholder_map_use"
+        ],
+        "timeframe": "30 days"
+      }
+    },
+    {
+      "name": "Newsletter Subscribers",
+      "description": "Users who have subscribed to the newsletter",
+      "criteria": {
+        "events": ["newsletter_subscribe"],
+        "timeframe": "all time"
+      }
+    }
+  ],
+  "retention_analysis": {
+    "primary_events": [
+      "episode_play",
+      "glossary_open",
+      "newsletter_subscribe"
+    ],
+    "cohort_periods": ["7 days", "30 days", "90 days"]
+  }
+}
+
