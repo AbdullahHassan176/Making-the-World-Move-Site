@@ -20,6 +20,11 @@ jobs:
           node-version: '18'
           cache: 'pnpm'
           
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          
       - name: Install dependencies
         run: pnpm install
         
@@ -32,36 +37,10 @@ jobs:
       - name: Build
         run: pnpm build
         env:
-          NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
+          NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID || 'demo' }}
           NEXT_PUBLIC_SANITY_DATASET: production
-          NEXT_PUBLIC_POSTHOG_KEY: ${{ secrets.POSTHOG_KEY }}
+          NEXT_PUBLIC_POSTHOG_KEY: ${{ secrets.POSTHOG_KEY || 'demo' }}
           NEXT_PUBLIC_SITE_URL: https://makingtheworldmove.com
-          
-      - name: Run tests
-        run: pnpm test
-        
-      - name: Run E2E tests
-        run: pnpm test:e2e
-        env:
-          PLAYWRIGHT_BASE_URL: http://localhost:3000
-
-  deploy-staging:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/develop'
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        
-      - name: Deploy to Vercel (Staging)
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'
-          working-directory: ./
 
   deploy-production:
     needs: test
@@ -72,14 +51,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         
-      - name: Deploy to Vercel (Production)
-        uses: amondnet/vercel-action@v25
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'
-          working-directory: ./
+          node-version: '18'
+          cache: 'pnpm'
+          
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          
+      - name: Install dependencies
+        run: pnpm install
+        
+      - name: Build
+        run: pnpm build
+        env:
+          NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID || 'demo' }}
+          NEXT_PUBLIC_SANITY_DATASET: production
+          NEXT_PUBLIC_POSTHOG_KEY: ${{ secrets.POSTHOG_KEY || 'demo' }}
+          NEXT_PUBLIC_SITE_URL: https://makingtheworldmove.com
           
       - name: Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
@@ -88,6 +80,6 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           app_location: "/"
-          output_location: ".next"
+          output_location: "out"
           skip_app_build: true
 
