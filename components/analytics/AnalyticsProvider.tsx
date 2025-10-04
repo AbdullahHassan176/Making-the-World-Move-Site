@@ -21,28 +21,33 @@ export function AnalyticsProvider({ children }: { children: React.ReactNode }) {
     if (!isMounted) return
 
     // Initialize dataLayer for GA4
-    window.dataLayer = window.dataLayer || []
-    
-    // Initialize PostHog
-    if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_POSTHOG_KEY) {
-      import('posthog-js').then((posthog) => {
-        posthog.default.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
-          api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://app.posthog.com',
-          loaded: (posthog) => {
-            if (process.env.NODE_ENV === 'development') {
-              posthog.debug()
+    if (typeof window !== 'undefined') {
+      window.dataLayer = window.dataLayer || []
+      
+      // Initialize PostHog only if key is available and not 'demo'
+      const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY
+      if (posthogKey && posthogKey !== 'demo') {
+        import('posthog-js').then((posthog) => {
+          posthog.default.init(posthogKey, {
+            api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://app.posthog.com',
+            loaded: (posthog) => {
+              if (process.env.NODE_ENV === 'development') {
+                posthog.debug()
+              }
             }
-          }
+          })
+          window.posthog = posthog.default
+        }).catch((error) => {
+          console.warn('PostHog initialization failed:', error)
         })
-        window.posthog = posthog.default
-      })
+      }
     }
   }, [isMounted])
 
   return (
     <>
       {/* Google Analytics */}
-      {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+      {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID !== 'demo' && (
         <>
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
